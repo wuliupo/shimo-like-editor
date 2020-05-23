@@ -3,7 +3,7 @@
     <div class="desktop-title">我的桌面</div>
     <div class="docs-item-wrapper" v-for="(file, index) in files" :key="index">
       <a class="docs-item" :href="`#/docs/${file.id}`" title="">
-        <img src="https://assets.smcdn.cn/static/lizard-service-desktop/assets/doc_160_flat@2x.098efd4b.png" style="width: 80px; height: 80px;">
+        <img :src="fileImage" style="width: 80px; height: 80px;">
         <div class="docs-item-name">{{ file.name || '无标题' }}</div>
       </a>
     </div>
@@ -12,10 +12,13 @@
 </template>
 <script>
 import { getDesktop, createDoc } from '@/api'
+import fileImage from '@/assets/images/doc.png'
+
 export default {
   name: 'Desktop',
   data: () => ({
-    files: []
+    files: [],
+    fileImage,
   }),
   methods: {
     newDoc() {

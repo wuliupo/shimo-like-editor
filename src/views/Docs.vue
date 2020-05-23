@@ -43,7 +43,7 @@
           <input type="" name="" v-model="docs.name" @blur="onNameBlur" placeholder="无标题">
         </div>
       </div>
-      <quill-editor :content="content" :options="editorOption" ref="docEditor"/>
+      <quill-editor :options="editorOption" ref="docEditor"/>
     </div>
   </div>
 </template>
@@ -53,7 +53,8 @@ import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 
-import { quillEditor } from 'vue-quill-editor'
+import { quillEditor, Quill } from 'vue-quill-editor'
+const Delta = Quill.import('delta');
 
 import { getContent, getDocs, updateDocs, composeContent } from '@/api'
 
@@ -64,7 +65,7 @@ export default {
   },
   data() {
     return {
-      content: '',
+      content: null,
       editorOption: {
         theme: 'snow',
         modules: {
@@ -77,6 +78,7 @@ export default {
       docs: {},
       stack: [],
       holding: false,
+      clientId: new Date().valueOf(),
     }
   },
   computed: {
@@ -85,16 +87,31 @@ export default {
     }
   },
   methods: {
-    onTextChange(delta) {
+    onTextChange(delta, oldDelta, source) {
+      if (source == 'sync') {
+        return;
+      }
       this.stack.push(delta);
       if (!this.holding) {
-        this.holding = true;
-        composeContent(this.docs.contentId, this.getDelta()).then(() => {
-          setTimeout(() => {
-            this.holding = false;
-          }, 200);
-        });
+        this.syncContent();
       }
+    },
+    syncContent() {
+      this.holding = true;
+      composeContent(this.docs.id, {
+        body: this.getDelta(),
+        clientId: this.clientId,
+      }).then(() => {
+        setTimeout(() => {
+          this.holding = false;
+          if (this.stack.length > 0) {
+            composeContent(this.docs.id, {
+              body: this.getDelta(),
+              clientId: this.clientId,
+            });
+          }
+        }, 200);
+      });
     },
     getDelta() {
       const stacks = this.stack.reduce((existingDelta, currentDelta) => existingDelta.compose(currentDelta));
@@ -106,12 +123,27 @@ export default {
         name: e.target.value
       });
     },
+    syncDoc() {
+      let es = new EventSource(`http://localhost:3030/api/docs/${this.docs.id}/pull?clientId=${this.clientId}`);
+      es.addEventListener('message', event => {
+        let data = JSON.parse(event.data);
+        console.log(data.body);
+        if (data.name) {
+          this.docs.name = data.name;
+        } else if (data.clientId != this.clientId) {
+          this.editor.updateContents(data.body, 'sync');
+        }
+      }, false);
+    }
   },
   mounted() {
-    getDocs(this.$route.params.id).then(docs => {
+    const docId = this.$route.params.id;
+    getDocs(docId).then(docs => {
       this.docs = docs.data;
-      getContent(this.docs.contentId).then(content => {
-        this.editor.updateContents(content.data);
+      getContent(docId).then(content => {
+        this.content = new Delta(content.data);
+        this.editor.setContents(this.content, 'init');
+        this.syncDoc();
         this.editor.on('text-change', this.onTextChange);
       })
     });
