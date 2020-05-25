@@ -98,19 +98,19 @@ export default {
     },
     syncContent() {
       this.holding = true;
-      composeContent(this.docs.id, {
-        body: this.getDelta(),
-        clientId: this.clientId,
-      }).then(() => {
+      this.flushContent().then(() => {
         setTimeout(() => {
           this.holding = false;
           if (this.stack.length > 0) {
-            composeContent(this.docs.id, {
-              body: this.getDelta(),
-              clientId: this.clientId,
-            });
+            this.flushContent();
           }
-        }, 200);
+        }, 300);
+      });
+    },
+    flushContent() {
+      return composeContent(this.docs.id, {
+        body: this.getDelta(),
+        clientId: this.clientId,
       });
     },
     getDelta() {
@@ -124,7 +124,7 @@ export default {
       });
     },
     syncDoc() {
-      let es = new EventSource(`http://localhost:3030/api/docs/${this.docs.id}/pull?clientId=${this.clientId}`);
+      let es = new EventSource(`/api/docs/${this.docs.id}/pull?clientId=${this.clientId}`);
       es.addEventListener('message', event => {
         let data = JSON.parse(event.data);
         console.log(data.body);
