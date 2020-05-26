@@ -125,7 +125,7 @@ export default {
     },
     syncDoc() {
       let es = new EventSource(`/api/docs/${this.docs.id}/pull?clientId=${this.clientId}`);
-      es.addEventListener('message', event => {
+      es.addEventListener(this.docs.id, event => {
         let data = JSON.parse(event.data);
         console.log(data.body);
         if (data.name) {
