@@ -76,8 +76,7 @@ export default {
         placeholder: '',
       },
       docs: {},
-      stack: [],
-      holding: false,
+      change: new Delta(),
       clientId: new Date().valueOf(),
     }
   },
@@ -91,32 +90,7 @@ export default {
       if (source == 'sync') {
         return;
       }
-      this.stack.push(delta);
-      if (!this.holding) {
-        this.syncContent();
-      }
-    },
-    syncContent() {
-      this.holding = true;
-      this.flushContent().then(() => {
-        setTimeout(() => {
-          this.holding = false;
-          if (this.stack.length > 0) {
-            this.flushContent();
-          }
-        }, 300);
-      });
-    },
-    flushContent() {
-      return composeContent(this.docs.id, {
-        body: this.getDelta(),
-        clientId: this.clientId,
-      });
-    },
-    getDelta() {
-      const stacks = this.stack.reduce((existingDelta, currentDelta) => existingDelta.compose(currentDelta));
-      this.stack = [];
-      return stacks;
+      this.change = this.change.compose(delta);
     },
     onNameBlur(e) {
       updateDocs(this.docs.id, {
@@ -124,7 +98,7 @@ export default {
       });
     },
     syncDoc() {
-      let es = new EventSource(`http://154.8.220.184:3030/api/docs/${this.docs.id}/pull?clientId=${this.clientId}`);
+      let es = new EventSource(`/api/docs/${this.docs.id}/pull?clientId=${this.clientId}`);
       es.addEventListener(this.docs.id, event => {
         let data = JSON.parse(event.data);
         console.log(data.body);
@@ -134,7 +108,18 @@ export default {
           this.editor.updateContents(data.body, 'sync');
         }
       }, false);
-    }
+    },
+    compose() {
+      setInterval(() => {
+        if (this.change.length() > 0) {
+          composeContent(this.docs.id, {
+            body: this.change,
+            clientId: this.clientId,
+          });
+          this.change = new Delta();
+        }
+      }, 1000);
+    },
   },
   mounted() {
     const docId = this.$route.params.id;
@@ -144,6 +129,7 @@ export default {
         this.content = new Delta(content.data);
         this.editor.setContents(this.content, 'init');
         this.syncDoc();
+        this.compose();
         this.editor.on('text-change', this.onTextChange);
       })
     });
