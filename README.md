@@ -1,24 +1,14 @@
-# doc-live-editor
+# 仿石墨文档编辑器
 
-## Project setup
-```
-npm install
-```
+## 脚本
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
+```bash
+npm install # setup
+npm run serve # Compiles and hot-reloads for development
+npm run build # Compiles and minifies for production
+npm run lint # Lints and fixes files
 ```
 
-### Lints and fixes files
-```
-npm run lint
-```
+### 技术
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+- Vue-Cli 配置 [Configuration Reference](https://cli.vuejs.org/config/)
