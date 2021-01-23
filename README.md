@@ -12,3 +12,4 @@ npm run lint # Lints and fixes files
 ### 技术
 
 - Vue-Cli 配置 [Configuration Reference](https://cli.vuejs.org/config/)
+- 基于 Quill、适用于 Vue 的富文本编辑器 [Vue-Quill-Editor](https://github.com/surmon-china/vue-quill-editor)
