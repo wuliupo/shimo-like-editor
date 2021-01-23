@@ -1,12 +1,19 @@
-import Vue from 'vue'
-import './plugins/axios'
-import App from './App.vue'
-import router from './router'
-import 'normalize.css'
-import '@/assets/css/global.css'
-Vue.config.productionTip = false
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import App from './App';
+import routes from './router';
+import 'normalize.css';
+import '@/assets/css/global.css';
+
+Vue.config.productionTip = false;
+
+Vue.use(VueRouter);
+const router = new VueRouter({
+    mode: 'history',
+    routes,
+});
 
 new Vue({
-  router,
-  render: h => h(App)
-}).$mount('#app')
+    router,
+    render: (h) => h(App),
+}).$mount('#app');

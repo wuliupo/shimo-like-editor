@@ -1,0 +1,12 @@
+name: venus-page
+nodeVersion: 12.16.1
+version: v1
+
+jobs:
+    web:
+        type: static
+        script:
+            - npm install --ignore-optional
+            - PUBLIC_PATH=${ossDomain}/cd/ npm run build
+        output: dist
+        ossFolder: cd
