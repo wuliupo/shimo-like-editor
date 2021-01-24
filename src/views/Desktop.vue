@@ -52,4 +52,4 @@ export default {
     },
 };
 </script>
-<style src="../assets/css/desktop.css"></style>
+<style lang="less" src="../assets/css/desktop.less"></style>

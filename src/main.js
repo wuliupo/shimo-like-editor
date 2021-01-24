@@ -4,7 +4,7 @@ import VueRouter from 'vue-router';
 import App from './App';
 import routes from './router';
 import 'normalize.css';
-import '@/assets/css/global.css';
+import '@/assets/css/global.less';
 
 Vue.config.productionTip = false;
 

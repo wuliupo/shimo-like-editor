@@ -1,53 +1,54 @@
 <template>
     <div class="docs-container">
-        <div class="ql-header">
-            <div :id="toolbar">
-                <span class="ql-formats">
-                    <select class="ql-font">
-                        <option selected />
-                        <option value="serif" />
-                        <option value="monospace" />
-                    </select>
-                    <select class="ql-size">
-                        <option value="small" />
-                        <option selected />
-                        <option value="large" />
-                        <option value="huge" />
-                    </select>
-                </span>
-                <span class="ql-formats">
-                    <button class="ql-bold" />
-                    <button class="ql-italic" />
-                    <button class="ql-underline" />
-                    <button class="ql-strike" />
-                    <button class="ql-blockquote" />
-                    <button class="ql-code-block" />
-                </span>
-                <span class="ql-formats">
-                    <button
-                        class="ql-list"
-                        value="ordered"
-                    />
-                    <button
-                        class="ql-list"
-                        value="bullet"
-                    />
-                </span>
-                <span class="ql-formats">
-                    <button
-                        class="ql-script"
-                        value="sub"
-                    />
-                    <button
-                        class="ql-script"
-                        value="super"
-                    />
-                </span>
-                <span class="ql-formats">
-                    <button class="ql-link" />
-                    <button class="ql-image" />
-                </span>
-            </div>
+        <div
+            :id="toolbar"
+            class="ql-header"
+        >
+            <span class="ql-formats">
+                <select class="ql-font">
+                    <option selected />
+                    <option value="serif" />
+                    <option value="monospace" />
+                </select>
+                <select class="ql-size">
+                    <option value="small" />
+                    <option selected />
+                    <option value="large" />
+                    <option value="huge" />
+                </select>
+            </span>
+            <span class="ql-formats">
+                <button class="ql-bold" />
+                <button class="ql-italic" />
+                <button class="ql-underline" />
+                <button class="ql-strike" />
+                <button class="ql-blockquote" />
+                <button class="ql-code-block" />
+            </span>
+            <span class="ql-formats">
+                <button
+                    class="ql-list"
+                    value="ordered"
+                />
+                <button
+                    class="ql-list"
+                    value="bullet"
+                />
+            </span>
+            <span class="ql-formats">
+                <button
+                    class="ql-script"
+                    value="sub"
+                />
+                <button
+                    class="ql-script"
+                    value="super"
+                />
+            </span>
+            <span class="ql-formats">
+                <button class="ql-link" />
+                <button class="ql-image" />
+            </span>
         </div>
         <div class="editor-container">
             <div class="ql-title">
@@ -101,6 +102,7 @@ export default {
             toolbar,
             editorOption: {
                 theme: 'snow',
+                // theme: 'bubble',
                 modules: {
                     toolbar: {
                         container: `#${toolbar}`,
@@ -175,4 +177,4 @@ export default {
 };
 </script>
 
-<style src="../assets/css/docs.css"></style>
+<style lang="less" src="../assets/css/docs.less"></style>

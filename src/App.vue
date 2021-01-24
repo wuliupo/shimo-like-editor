@@ -12,4 +12,4 @@
     </div>
 </template>
 
-<style src="./assets/css/app.css"></style>
+<style lang="less" src="./assets/css/app.less"></style>
